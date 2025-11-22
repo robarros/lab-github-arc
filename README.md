@@ -1,4 +1,2 @@
 # lab-github-arc
 
-charts
-
