@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   test-internal:
-    name: Testar Serviço Interno
+    name: Build and Deploy to ChartMuseum
     runs-on: arc-runner-set  
 
     steps:
@@ -38,9 +38,7 @@ jobs:
         run: |
           echo "Adicionando repositório ChartMuseum"
           helm repo add chartmuseum http://chartmuseum.default.svc.cluster.local:8080 || true
-          helm repo update || true
           helm repo list
-          helm search repo chartmuseum  
 
       - name: Instalar plugin helm-push (ChartMuseum)
         run: |
@@ -49,19 +47,16 @@ jobs:
           fi
           helm plugin list || true
 
-      # - name: Empacotar e enviar chart para ChartMuseum (helm push)
-      #   run: |
-      #     set -e
-      #     mkdir -p charts-packages
-      #     echo "Empacotando chart em app-lab"
-      #     helm package app-lab -d charts-packages
-      #     CHART_FILE=$(ls charts-packages/*.tgz | head -n1 || true)
-      #     if [ -z "${CHART_FILE}" ]; then
-      #       echo "Nenhum pacote de chart encontrado em charts-packages"; exit 1
-      #     fi
-      #     echo "Enviando ${CHART_FILE} para ChartMuseum em http://chat.default.svc.cluster.local usando helm push"
-      #     helm push "${CHART_FILE}" chartmuseum || { echo "Falha ao enviar chart para ChartMuseum"; exit 1; }
-      #     echo "Push concluído: ${CHART_FILE}"
+      - name: Empacotar e enviar chart para ChartMuseum (helm push)
+        run: |
+          set -e
+          echo "Empacotando chart app-lab"
+          helm package app-lab || { echo "Falha ao empacotar o chart"; exit 1; }
+          echo "Enviando chart para ChartMuseum"
+          helm-cm-push app-lab/ chartmuseum
+          helm repo update || true
+          helm repo list
+          helm search repo chartmuseum  
       - name: Verificar runner
         run: |
           echo "Rodando no runner:" hostname
