@@ -1,0 +1,27 @@
+name: Test Internal Kubernetes Service
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  test-internal:
+    name: Testar Serviço Interno
+    runs-on: self-hosted   # Runner ARC no Kubernetes
+
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+
+      - name: Verificar runner
+        run: |
+          echo "Rodando no runner:"
+          hostname
+
+      - name: Testar acesso ao serviço interno http-echo
+        run: |
+          echo "Chamando serviço interno no Kubernetes..."
+          curl -v http-echo.default.svc.cluster.local
