@@ -20,6 +20,7 @@ jobs:
         run: |
           echo "Rodando no runner:"
           hostname
+          helm version
 
       - name: Testar acesso ao serviço interno http-echo
         run: |
