@@ -36,17 +36,34 @@ jobs:
           fi
           helm plugin list || true
 
+      - name: Gerar SemVer Aleatório
+        id: generate_semver
+        run: |
+          # Gera números aleatórios para MAJOR, MINOR e PATCH, limitando a no máximo 99.
+          RANDOM_MAJOR=$(( $RANDOM % 10 ))
+          RANDOM_MINOR=$(( $RANDOM % 20 ))
+          RANDOM_PATCH=$(( $RANDOM % 50 ))
+
+          # Constrói a string SemVer
+          RANDOM_SEMVER="${RANDOM_MAJOR}.${RANDOM_MINOR}.${RANDOM_PATCH}"
+
+          # Imprime o resultado para o log
+          echo "Versão SemVer gerada: $RANDOM_SEMVER"
+
+          # Exporta o valor como uma saída (output) do step
+          echo "semver=$RANDOM_SEMVER" >> $GITHUB_OUTPUT
+
       - name: Atualizar appVersion em Chart.yaml
         run: |
           ls -lha
           echo "Atualizando app-lab/Chart.yaml com o valor de $RANDOM"
-          NEW_VER="$RANDOM"
-          sed -i -E "s~^appVersion:.*~appVersion: \"${NEW_VER}\"~" app-lab/Chart.yaml || { echo "Falha ao atualizar app-lab/Chart.yaml"; exit 1; }
+          NEW_VERSION=${{ steps.generate_semver.outputs.semver }}
+          sed -i -E "s~^appVersion:.*~appVersion: \"${NEW_VERSION}\"~" app-lab/Chart.yaml || { echo "Falha ao atualizar app-lab/Chart.yaml"; exit 1; }
           grep '^appVersion' -n app-lab/Chart.yaml || true
-          sed -i -E "s~^version:.*~version: \"${NEW_VER}\"~" app-lab/Chart.yaml || { echo "Falha ao atualizar app-lab/Chart.yaml"; exit 1; }
+          sed -i -E "s~^version:.*~version: \"${NEW_VERSION}\"~" app-lab/Chart.yaml || { echo "Falha ao atualizar app-lab/Chart.yaml"; exit 1; }
           grep '^version' -n app-lab/Chart.yaml || true
-          echo "appVersion atualizado para: ${NEW_VER}"
-          echo "version atualizado para: ${NEW_VER}"
+          echo "appVersion atualizado para: ${NEW_VERSION}"
+          echo "version atualizado para: ${NEW_VERSION}"
 
       - name: Empacotar e enviar chart para ChartMuseum (helm push)
         run: |
