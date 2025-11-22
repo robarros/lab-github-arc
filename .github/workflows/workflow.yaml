@@ -53,7 +53,7 @@ jobs:
           echo "Empacotando chart app-lab"
           helm package app-lab || { echo "Falha ao empacotar o chart"; exit 1; }
           echo "Enviando chart para ChartMuseum"
-          helm-cm-push app-lab/ chartmuseum
+          helm cm-push app-lab/ chartmuseum
           helm repo update || true
           helm repo list
           helm search repo chartmuseum  
