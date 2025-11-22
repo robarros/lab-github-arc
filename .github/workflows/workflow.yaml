@@ -24,6 +24,7 @@ jobs:
 
       - name: Atualizar appVersion em Chart.yaml
         run: |
+          ls -lha
           echo "Atualizando app-lab/Chart.yaml com o valor de $RANDOM"
           NEW_VER="$RANDOM"
           sed -i -E "s~^appVersion:.*~appVersion: \"${NEW_VER}\"~" app-lab/Chart.yaml || { echo "Falha ao atualizar app-lab/Chart.yaml"; exit 1; }
