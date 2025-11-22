@@ -40,6 +40,7 @@ jobs:
           helm repo add chartmuseum http://chartmuseum.default.svc.cluster.local:8080 || true
           helm repo update || true
           helm repo list
+          helm search repo chartmuseum  
 
       - name: Instalar plugin helm-push (ChartMuseum)
         run: |
