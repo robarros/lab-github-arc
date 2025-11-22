@@ -40,7 +40,8 @@ jobs:
         id: generate_semver
         run: |
           # Gera números aleatórios para MAJOR, MINOR e PATCH, limitando a no máximo 99.
-          RANDOM_MAJOR=$(( $RANDOM % 10 ))
+          #RANDOM_MAJOR=$(( $RANDOM % 10 ))
+          RANDOM_MAJOR=1
           RANDOM_MINOR=$(( $RANDOM % 20 ))
           RANDOM_PATCH=$(( $RANDOM % 50 ))
 
