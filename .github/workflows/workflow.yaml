@@ -10,7 +10,7 @@ on:
 jobs:
   test-internal:
     name: Testar Serviço Interno
-    runs-on: self-hosted   # Runner ARC no Kubernetes
+    runs-on: arc-runner-set  
 
     steps:
       - name: Checkout do repositório
