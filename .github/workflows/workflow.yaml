@@ -1,4 +1,4 @@
-name: Test Internal Kubernetes Service
+name: Deploy Helm Chart to ChartMuseum
 
 on:
   push:
@@ -56,7 +56,6 @@ jobs:
 
       - name: Atualizar appVersion em Chart.yaml
         run: |
-          ls -lha
           echo "Atualizando app-lab/Chart.yaml com o valor de $RANDOM"
           NEW_VERSION=${{ steps.generate_semver.outputs.semver }}
           sed -i -E "s~^appVersion:.*~appVersion: \"${NEW_VERSION}\"~" app-lab/Chart.yaml || { echo "Falha ao atualizar app-lab/Chart.yaml"; exit 1; }
