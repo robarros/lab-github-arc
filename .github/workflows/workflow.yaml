@@ -19,20 +19,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v5.0.0
-        with:
-          fetch-depth: 0
-
-      - name: Atualizar appVersion em Chart.yaml
-        run: |
-          ls -lha
-          echo "Atualizando app-lab/Chart.yaml com o valor de $RANDOM"
-          NEW_VER="$RANDOM"
-          sed -i -E "s~^appVersion:.*~appVersion: \"${NEW_VER}\"~" app-lab/Chart.yaml || { echo "Falha ao atualizar app-lab/Chart.yaml"; exit 1; }
-          grep '^appVersion' -n app-lab/Chart.yaml || true
-          sed -i -E "s~^version:.*~version: \"${NEW_VER}\"~" app-lab/Chart.yaml || { echo "Falha ao atualizar app-lab/Chart.yaml"; exit 1; }
-          grep '^version' -n app-lab/Chart.yaml || true
-          echo "appVersion atualizado para: ${NEW_VER}"
-          echo "version atualizado para: ${NEW_VER}"
 
       - name: Setup Helm (action)
         uses: azure/setup-helm@v4.3.0
@@ -49,6 +35,18 @@ jobs:
             helm plugin install https://github.com/chartmuseum/helm-push.git || true
           fi
           helm plugin list || true
+
+      - name: Atualizar appVersion em Chart.yaml
+        run: |
+          ls -lha
+          echo "Atualizando app-lab/Chart.yaml com o valor de $RANDOM"
+          NEW_VER="$RANDOM"
+          sed -i -E "s~^appVersion:.*~appVersion: \"${NEW_VER}\"~" app-lab/Chart.yaml || { echo "Falha ao atualizar app-lab/Chart.yaml"; exit 1; }
+          grep '^appVersion' -n app-lab/Chart.yaml || true
+          sed -i -E "s~^version:.*~version: \"${NEW_VER}\"~" app-lab/Chart.yaml || { echo "Falha ao atualizar app-lab/Chart.yaml"; exit 1; }
+          grep '^version' -n app-lab/Chart.yaml || true
+          echo "appVersion atualizado para: ${NEW_VER}"
+          echo "version atualizado para: ${NEW_VER}"
 
       - name: Empacotar e enviar chart para ChartMuseum (helm push)
         run: |
