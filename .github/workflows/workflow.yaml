@@ -28,8 +28,11 @@ jobs:
           echo "Atualizando app-lab/Chart.yaml com o valor de $RANDOM"
           NEW_VER="$RANDOM"
           sed -i -E "s~^appVersion:.*~appVersion: \"${NEW_VER}\"~" app-lab/Chart.yaml || { echo "Falha ao atualizar app-lab/Chart.yaml"; exit 1; }
-          echo "appVersion atualizado para: ${NEW_VER}"
           grep '^appVersion' -n app-lab/Chart.yaml || true
+          sed -i -E "s~^version:.*~version: \"${NEW_VER}\"~" app-lab/Chart.yaml || { echo "Falha ao atualizar app-lab/Chart.yaml"; exit 1; }
+          grep '^version' -n app-lab/Chart.yaml || true
+          echo "appVersion atualizado para: ${NEW_VER}"
+          echo "version atualizado para: ${NEW_VER}"
 
       - name: Setup Helm (action)
         uses: azure/setup-helm@v4.3.0
@@ -57,14 +60,6 @@ jobs:
           helm repo update || true
           helm repo list
           helm search repo chartmuseum  
-      - name: Verificar runner
-        run: |
-          echo "Rodando no runner:" hostname
-          
-      - name: Testar acesso ao serviço interno http-echo
-        run: |
-          echo "Chamando serviço interno no Kubernetes..."
-          curl -v http-echo.default.svc.cluster.local
 
       - name: Commit and push changes
         uses: stefanzweifel/git-auto-commit-action@v7
