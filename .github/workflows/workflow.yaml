@@ -68,6 +68,8 @@ jobs:
       - name: Empacotar e enviar chart para ChartMuseum (helm push)
         run: |
           set -e
+          HELM_REPO_USERNAME=${{ secrets.HELM_REPO_USERNAME }}
+          HELM_REPO_PASSWORD=${{ secrets.HELM_REPO_PASSWORD }}
           echo "Empacotando chart app-lab"
           helm package app-lab || { echo "Falha ao empacotar o chart"; exit 1; }
           echo "Enviando chart para ChartMuseum"
