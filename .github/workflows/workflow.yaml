@@ -85,3 +85,11 @@ jobs:
           commit_user_name: "github-actions"
           commit_user_email: "github-actions@users.noreply.github.com"
           tag_name: ${{ steps.generate_semver.outputs.semver }}
+
+      - name: Create Release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ steps.generate_semver.outputs.semver }}
+          name: Release ${{ steps.generate_semver.outputs.semver }}
+          body: "Automated release of version ${{ steps.generate_semver.outputs.semver }}"
+
