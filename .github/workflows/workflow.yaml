@@ -84,3 +84,4 @@ jobs:
           file_pattern: "app-lab/Chart.yaml"
           commit_user_name: "github-actions"
           commit_user_email: "github-actions@users.noreply.github.com"
+          tag_name: ${{ steps.generate_semver.outputs.semver }}
